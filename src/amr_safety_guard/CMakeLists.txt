@@ -48,6 +48,11 @@ amr_safety_guard/person_detector.py
 DESTINATION lib/${PROJECT_NAME}
 RENAME person_detector
 )
+install(PROGRAMS
+  amr_safety_guard/mission_monitor.py
+  DESTINATION lib/${PROJECT_NAME}
+  RENAME mission_monitor
+)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)

@@ -4,7 +4,7 @@ import rclpy
 from rclpy.node import Node
 from rclpy.action import ActionClient
 from nav2_msgs.action import FollowWaypoints
-from geometry_msgs.msg import PoseStamped
+from geometry_msgs.msg import PoseStamped, PoseArray
 from math import sin, cos
 import time
 
@@ -14,6 +14,15 @@ class PatrolNode(Node):
         self._action_client = ActionClient(self, FollowWaypoints, 'follow_waypoints')
         self.waypoints = [[-5.0, 8.0, 0.0], [5.0,2.0,-1.57],[2.0,-8.0,3.14],[-5.0,-8.0,1.57]]
         self._first_run = True
+        self._wp_publisher = self.create_publisher(PoseArray, '/patrol_waypoints', 10)
+        # Publish waypoints repeatedly so late-joining nodes receive them
+        self.create_timer(2.0, self._publish_waypoints)
+    def _publish_waypoints(self):
+        msg = PoseArray()
+        msg.header.frame_id = 'map'
+        msg.poses = [self.create_pose(wp[0], wp[1], wp[2]).pose for wp in self.waypoints]
+        self._wp_publisher.publish(msg)
+
     def create_pose(self, x, y, yaw):
         pose = PoseStamped()
         pose.header.frame_id = 'map'

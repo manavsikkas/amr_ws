@@ -100,13 +100,6 @@ def generate_launch_description():
         output='screen',
     )
 
-    emergency_stop = Node(
-        package='amr_safety_guard',
-        executable='emergency_stop',
-        name='emergency_stop',
-        output='screen',
-    )
-
     return LaunchDescription([
         simulation,
         TimerAction(period=5.0, actions=[nav2]),
@@ -116,6 +109,5 @@ def generate_launch_description():
         costmap_filter_info,
         keepout_lifecycle_manager,
         person_detector,
-        emergency_stop,
     ])
 
